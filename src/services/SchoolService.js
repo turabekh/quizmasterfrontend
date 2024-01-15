@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api'; // Replace with your API URL
+const API_URL = 'https://turaboydeveloper.pythonanywhere.com/api'; // Replace with your API URL
 
 axios.interceptors.request.use(config => {
     const user = JSON.parse(localStorage.getItem('user'));
