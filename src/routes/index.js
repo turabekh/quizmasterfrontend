@@ -15,7 +15,6 @@ import AttemptDetail from '../views/AttemptDetail';
 import QuizLeaderboard from '../views/QuizLeaderboard';
 import Tasks from '../views/Tasks';
 import Task from '../views/Task';
-import Home from '../views/Home';
 import AuthService from '../services/AuthService';
 
 const isAuthenticated = () => {
@@ -28,7 +27,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={
         <PublicRoute isAuthenticated={isAuthenticated()}>
-          <Home />
+          <Login />
         </PublicRoute>
       } />
       <Route path="/login" element={
