@@ -99,7 +99,7 @@ const SchoolService = {
     } catch (error) {
       throw error;
     }
-  }
+  }, 
 };
 
 export default SchoolService;

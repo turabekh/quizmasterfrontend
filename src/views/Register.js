@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Typography, Link, Snackbar } from '@mui/material';
@@ -7,14 +7,27 @@ import MuiAlert from '@mui/material/Alert'; // Import MuiAlert for Snackbar mess
 import AuthService from '../services/AuthService';
 import { useNavigate } from 'react-router-dom';
 
-const groups = [{ id: 1, name: 'Group 1' }, { id: 2, name: 'Group 2' }, { id: 3, name: 'Group 3' }];
+// const groups = [{ id: 1, name: 'Group 1' }, { id: 2, name: 'Group 2' }, { id: 3, name: 'Group 3' }];
 
 const Register = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const groupsData = await AuthService.getStudentGroups();
+        setGroups(groupsData);
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+      }
+    };
+
+    fetchGroups();
+  }, []);
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -131,7 +144,7 @@ const Register = () => {
             </MenuItem>
             {groups.map((group) => (
               <MenuItem key={group.id} value={group.id}>
-                {group.name}
+                {group.group_name}
               </MenuItem>
             ))}
           </Select>

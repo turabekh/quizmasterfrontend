@@ -118,6 +118,15 @@ class AuthService {
     }
   }
 
+   async getStudentGroups() {
+    try {
+      const response = await axios.get(`${API_URL}/auth/student-groups/`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   isAuthenticated() {
     const user = this.getCurrentUser();
     return user && user.access ? true : false;

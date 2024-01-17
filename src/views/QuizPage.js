@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Typography,
   Button,
@@ -21,6 +21,8 @@ const QuizPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpenSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -71,14 +73,26 @@ const QuizPage = () => {
       }
 
       // Call the handleQuizSubmit function from SchoolService
+      setLoading(true);
       SchoolService.handleQuizSubmit(quizId, quizResponses)
         .then((response) => {
           // Handle the response, e.g., show a success message
-          console.log('Quiz Submitted:', response);
+          handleOpenSnackbar('Quiz Submitted!', 'success');
+          setLoading(false);
+          setTimeout(() => {
+            navigate('/gradebook', { replace: true });
+          }, 500)
+        
         })
         .catch((error) => {
           // Handle any errors, e.g., show an error message
-          console.error('Error submitting quiz:', error);
+          if (error?.response?.data?.message === 'You have reached the maximum number of attempts for this quiz.') {
+            handleOpenSnackbar('You have reached the maximum number of attempts for this quiz.', 'error');
+          }
+          else {
+            handleOpenSnackbar('Error submitting quiz.', 'error');
+          }
+          setLoading(false);
         });
     } else {
       // Show confirmation dialog if not all questions are answered
@@ -135,6 +149,7 @@ const QuizPage = () => {
         color="primary"
         style={{ marginTop: '16px' }}
         onClick={handleSubmitQuiz}
+        disabled={loading}
         fullWidth
       >
         Submit Quiz
